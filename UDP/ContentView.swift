@@ -8,14 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var receivedMessage: String = ""
+    private let udpServer = UDPServer()
+    private let udpPort: UInt16 = 8888 // ポート番号をここで指定
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            Text("速度: \(receivedMessage)")
+                .padding()
+                .font(.largeTitle)
+
+            Button("Start UDP Server") {
+                udpServer.startUDPServer(onPort: udpPort) { message in
+                    DispatchQueue.main.async {
+                        receivedMessage = message
+                    }
+                }
+            }
         }
-        .padding()
     }
 }
 
